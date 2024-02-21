@@ -1,21 +1,28 @@
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=UserWarning) 
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import yfinance as yf
+
+
+
 
 # Função para obter o histórico de preços de uma ação
 def get_historical_prices(ticker, start_date, end_date):
     df = yf.download(ticker, start=start_date, end=end_date)
     return df['Close']
 
-# Definir o ticket da Amazon
-ticker_amzn = 'MXRF11.SA'
+
+# Carregar os dados do Excel
+df = pd.read_excel("carteira-export.xlsx")  # Substitua "carteira-export.xlsx" pelo nome do seu arquivo Excel
 
 
+# Definir o ticket da 
+#ticker = 'MXRF11.SA'
+ticker = str(df['Código Ativo'].unique()[0] + ".SA")
 
+print((ticker))
 
 # Definir o intervalo de datas para o histórico de preços
 start_date = '2019-01-01'
@@ -24,13 +31,15 @@ end_date = '2023-12-31'
 
 
 # Obter o histórico de preços da Amazon
-historical_prices_amzn = get_historical_prices(ticker_amzn, start_date, end_date)
+historical_prices_amzn = get_historical_prices(ticker, start_date, end_date)
 
 
 
+# Filtras Ativos, fundos e ações
+#df_fundos = df[df['Categoria'].str.contains("Fundos imobiliários")]
+#df_acoes = df[df['Categoria'].str.contains("Ações")]
 
-# Carregar os dados do Excel
-df = pd.read_excel("carteira-export.xlsx")  # Substitua "carteira-export.xlsx" pelo nome do seu arquivo Excel
+
 
 # Converter a coluna de data para o tipo datetime
 df['Data operação'] = pd.to_datetime(df['Data operação'])
@@ -57,20 +66,20 @@ plt.plot(historical_prices_amzn.index, historical_prices_amzn.values, label='Pre
 
 #s = [10*n for n in range(len(df['Quantidade']))]
 #s = [df['Quantidade']]
-plt.scatter(df_compras['Data'], df_compras['Preço'], c='red', label='Compra', marker='o', s=s)
+plt.scatter(df_compras['Data'], df_compras['Preço'], c='red', label='Compra', marker='o')
 
 
 
 
 # Adicionar anotações com o preço de compra aos pontos de compra
-for i, row in df_compras.iterrows():
-    plt.annotate(f'{row["Quantidade"]:.1f}', (row['Data'], row['Quantidade']), textcoords="offset points", xytext=(0,10), ha='center')
+#for i, row in df_compras.iterrows():
+#    plt.annotate(f'{row["Quantidade"]:.1f}', (row['Data'], row['Quantidade']), textcoords="offset points", xytext=(0,10), ha='center')
 
 
 # Adicionar legendas e título
 plt.xlabel('Data')
 plt.ylabel('Preço')
-plt.title('Preço Histórico da Ação da (MXRF11.SA) e Pontos de Compra')
+plt.title('Preço Histórico da Ação da () e Pontos de Compra')
 plt.legend()
 
 # Rotacionar os rótulos do eixo x para melhor visualização
